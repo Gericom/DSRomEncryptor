@@ -21,5 +21,11 @@ The blowfish tables to be used by DSRomEncryptor are not included and need to be
 - Twl blowfish (dev)
     - `twlDevBlowfish.bin` containing the dev twl blowfish table (SHA1: `CFF62F24444F5494001F019D505F9C51D40FC8B3`)
 
+## Compiling
+
+1. Install the [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) for your system.
+2. Clone this repository.
+3. Compile with `dotnet build --configuration Release`.
+
 ## License
 DSRomEncryptor is licensed under the MIT License, see [LICENSE](./LICENSE.txt) for more information.
