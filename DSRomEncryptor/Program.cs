@@ -9,6 +9,7 @@ static class Program
     private const ulong SECURE_AREA_ID = 0x6A624F7972636E65UL; // "encryObj"
     private const int ROM_HEADER_GAME_CODE_OFFSET = 0xC;
     private const int ROM_HEADER_UNIT_CODE_OFFSET = 0x12;
+    private const int ROM_HEADER_SIZE_OFFSET = 0x14;
     private const int ROM_HEADER_TWL_FLAGS_OFFSET = 0x1C;
     private const int ROM_HEADER_ARM9_OFFSET_OFFSET = 0x20;
     private const int ROM_HEADER_SECURE_AREA_CRC_OFFSET = 0x6C;
@@ -135,6 +136,18 @@ static class Program
         {
             Console.WriteLine("Warning: Couldn't insert twl blowfish.");
         }
+
+        // Update ROM device capacity in header (0x14)
+        // Capacity = 128KB << N, where N is stored at offset 0x14
+        int romSize = romData.Length;
+        byte deviceCapacity = 0;
+        int capacity = 128 * 1024; // 128KB
+        while (capacity < romSize && deviceCapacity < 0xFF)
+        {
+            capacity <<= 1;
+            deviceCapacity++;
+        }
+        romDataSpan[ROM_HEADER_SIZE_OFFSET] = deviceCapacity;
 
         // Fix header CRC
         romDataSpan.WriteU16Le(ROM_HEADER_CRC_OFFSET, Crc16.CalculateCrc16(romDataSpan[..ROM_HEADER_CRC_OFFSET]));
